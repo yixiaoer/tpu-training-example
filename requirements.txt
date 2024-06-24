@@ -1,0 +1,10 @@
+jax
+jax_smi
+flax
+torch
+transformers
+sentencepiece
+datasets
+optax
+einshard
+wandb
