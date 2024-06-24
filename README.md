@@ -16,7 +16,7 @@ The second script should support fine-tuning on multiple devices, which includes
 
 After creating a TPU VM or a TPU Pod, the first step is to configure it using [tpux](https://github.com/yixiaoer/tpux).
 
-Create a venv and install dependencies:
+Then, create a venv and install dependencies:
 
 ```sh
 python3.12 -m venv ~/venv
@@ -50,7 +50,6 @@ You also need to set the `WANDB_API_KEY` in the proper location of the script to
 
     Go to [Wandb page](https://wandb.ai/yiixiaoer/training-t5/runs/agtpl7zk) to see the loss decrease.
 
-
 * For TPU VM (using all TPU chips), run the following command:
 
     ```sh
@@ -58,4 +57,4 @@ You also need to set the `WANDB_API_KEY` in the proper location of the script to
     python train_shard.py
     ```
 
-* **TODO**: The intention of the above commands is to perform training on TPU Pods. This involves running the above commands on all hosts, using the `podrun -iw` command. However, due to a bug of JAX (https://github.com/google/jax/issues/22070), the script does not work on TPU Pods yet.
+    Go to [Wandb page](https://wandb.ai/yiixiaoer/training-t5/runs/8osdw903) to see the loss decrease.
