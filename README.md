@@ -2,25 +2,36 @@
 
 ## Introduction
 
-This repository is an example of training a language model on Google Cloud TPU using JAX. Specifically, it fine-tunes a T5 model on the machine translation task, using wmt14 English to French dataset.
+This repository showcases an example of fine-tuning a language model using JAX on Google Cloud TPUs. Specifically, it focuses on fine-tuning the T5 model on the WMT14 English-to-French dataset for the machine translation task.
 
-There are two scripts in this repository, namely `train.py` and `train_shard.py`.
+## FAQ
 
-The first script, `train.py`, fine-tunes the model on a single TPU chip, without any parallelisation. The purpose of this script is to give a basic example of how JAX works.
+**Q: Why another JAX and TPU example?**
 
-The second script, `train_shard.py` fine-tunes the model on all chips of a TPU VM or all hosts in a TPU Pod. The purpose of this script is to demonstrate how to perform distributed training using JAX. 
+A: (1) JAX is awesome! The more examples with JAX, the better;
 
-The second script should support fine-tuning on multiple devices, which includes both (1) all TPU chips on a single host and (2) a TPU Pod. ~~However, due to a bug of JAX (https://github.com/google/jax/issues/22070), only (1) is currently supported.~~ <!-- This involves running the script on all hosts, using the `podrun -iw` command. -->
+(2) This project aims to promote the best practices used herein.
+
+**Q: Why use T5 instead of newer LLMs, such as Llama or Mistral?**
+
+A: For demonstration purposes, smaller models like T5 are chosen due to their lower memory footprint and ease of debugging. This setup allows focusing on the training logic, which remains consistent across model sizes.
+
+## Repository Structure
+
+This repository contains two scripts:
+
+- `train.py`: Fine-tunes the model on a single TPU VM chip without parallelization to provide a basic example of JAX in action.
+- `train_shard.py`: Demonstrates distributed training across all TPU chips in a single TPU VM or across all hosts in a TPU Pod.
 
 ## Prerequisites
 
-### Config your TPU
+### Configure Your TPU
 
-After creating a TPU VM or a TPU Pod, the first step is to configure it using [tpux](https://github.com/yixiaoer/tpux).
+Set up your TPU VM or TPU Pod with [tpux](https://github.com/yixiaoer/tpux).
 
-### Install dependencies
+### Install Dependencies
 
-Then, create a venv and install dependencies:
+Create a virtual environment and install dependencies as follows:
 
 ```sh
 # For TPU Pod, you should git clone in the `nfs_share` after using tpux to config
@@ -36,21 +47,13 @@ pip install git+https://github.com/huggingface/transformers
 pip install -r requirements.txt
 ```
 
-On TPU VM, you can directly run the above commands in the terminal. 
+For TPU VM, you can directly run the above commands in the terminal.
 
-On TPU Pod, you run the above command on host0 to create a venv in `nfs_shared`, and in [training part](https://github.com/yixiaoer/tpu-training-example#training) you will see how to use this one venv to run across hosts.
+For TPU Pod, you need to run the above commands on host0 and create the venv in `nfs_share`. Additionally, if you want to run the commands on each host within a TPU Pod, you need to use the `podrun` command from tpux. For instructions on how to use the `podrun` command, please refer to the section below on using the `podrun` command.
 
-On TPU Pod, if you want to run the above commands on every host, the way to do this is to utilise the `podrun` command from tpux. Run the following command:
+### Additional Setup
 
-```sh
-podrun -iw
-```
-
-The `podrun` program will pause and wait for your input. You can copy the above commands and paste them into the terminal, press enter, then press Ctrl+D to terminate the input. `podrun` will then start to run the commands on all TPU hosts.
-
-### Others
-
-You also need to set the `WANDB_API_KEY` in the proper location of the script to add your WANDB API key.
+Update the `WANDB_API_KEY` in the scripts to your own Wandb API key.
 
 ## Training
 
@@ -94,3 +97,15 @@ You also need to set the `WANDB_API_KEY` in the proper location of the script to
 
     echo venv/bin/python train_shard.py | podrun -iw
     ```
+
+## Using the `podrun` Command
+
+After configuring your TPU Pod with tpux, if you want to execute the same command across all hosts in the TPU Pod using the `podrun` command from tpux, you can use the following method:
+
+Enter the following command in the terminal:
+
+```sh
+podrun -iw
+```
+
+After pressing Enter, the `podrun` program will pause and wait for your input. You can copy the command(s) you wish to execute (supporting multiple lines) and paste them into the terminal, press Enter, and then press Ctrl+D to end the input. Afterward, `podrun` will start executing the command across all hosts in the TPU Pod.

@@ -44,7 +44,11 @@ if is_host0:
     wandb.login(key=WANDB_API_KEY)
     wandb.init(
         project='training-t5',
-        config=dict(batch_size=batch_size, learning_rate=learning_rate, max_length = 64)
+        config=dict(
+            batch_size=batch_size,
+            learning_rate=learning_rate,
+            max_length=max_length,
+        ),
     )
     os.environ['WANDB_LOG_MODEL'] = 'true'
     os.environ['WANDB_WATCH'] = 'true'
