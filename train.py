@@ -1,6 +1,7 @@
 import os
 os.environ['HF_DATASETS_CACHE'] = '/dev/shm'
 
+import argparse
 from typing import Any
 
 from datasets import Dataset, load_dataset
@@ -15,8 +16,27 @@ import wandb
 
 initialise_tracking()
 
-# add your wandb api key here
+# Replace ... with your actual wandb api key if needed
 WANDB_API_KEY = ...
+
+parser = argparse.ArgumentParser(description='Training script with Wandb API key')
+parser.add_argument('--WANDB_API_KEY', type=str, help='Wandb API key')
+args = parser.parse_args()
+wandb_api_key_cmd = args.WANDB_API_KEY
+wandb_api_key_default = WANDB_API_KEY if WANDB_API_KEY is not ... else None
+
+if wandb_api_key_cmd and wandb_api_key_default:
+    if wandb_api_key_cmd != wandb_api_key_default:
+        raise ValueError('WANDB_API_KEY from the command line argument does not match the default value in the code.')
+    else:
+        WANDB_API_KEY = wandb_api_key_cmd
+elif wandb_api_key_cmd:
+    WANDB_API_KEY = wandb_api_key_cmd
+elif wandb_api_key_default:
+    WANDB_API_KEY = wandb_api_key_default
+else:
+    raise ValueError('No WANDB_API_KEY provided. Please set it either in the code or via the command line argument.')
+
 dataset = load_dataset('wmt14', 'fr-en')
 train_data = dataset['train'].select(range(50000))
 val_data = dataset['validation']
@@ -110,7 +130,7 @@ for epoch in range(num_epochs):
         key, subkey = jax.random.split(key)
         model.params, opt_state, train_loss = train_step(model.params, opt_state, batch, subkey)
         wandb.log({
-            "train_loss": train_loss,
+            'train_loss': train_loss,
         })
 
     val_loss = 0.

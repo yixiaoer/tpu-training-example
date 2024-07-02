@@ -41,7 +41,7 @@ python3.12 -m venv ~/venv
 . ~/venv/bin/activate
 pip install -U pip
 pip install -U wheel
-pip install "jax[cpu]"
+pip install "jax[tpu]"
 pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu
 pip install git+https://github.com/huggingface/transformers
 pip install -r requirements.txt
@@ -53,7 +53,25 @@ For TPU Pod, you need to run the above commands on host0 and create the venv in 
 
 ### Additional Setup
 
-Update the `WANDB_API_KEY` in the scripts to your own Wandb API key.
+Set the `WANDB_API_KEY` either by updating the script or by providing it as a command line argument. At least one method should be used, and if both are provided, they must match.
+
+1. Update the `WANDB_API_KEY` in the scripts
+
+   Replace `...` with your own Wandb API key:
+
+   ```python
+   WANDB_API_KEY = 'YOUR_WANDB_API_KEY'
+   ```
+
+2. Provide via command line
+
+    For example, if you want to run `train.py`:
+
+    ```sh
+    python train.py --WANDB_API_KEY 'YOUR_WANDB_API_KEY'
+    ```
+
+To find your Wandb API key, go to [Your Wandb Setting](https://wandb.ai/settings) and locate the API keys section.
 
 ## Training
 
