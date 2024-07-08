@@ -41,7 +41,7 @@ python3.12 -m venv ~/venv
 . ~/venv/bin/activate
 pip install -U pip
 pip install -U wheel
-pip install "jax[tpu]"
+pip install -U "jax[tpu]" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu
 pip install git+https://github.com/huggingface/transformers
 pip install -r requirements.txt
