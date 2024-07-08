@@ -1,0 +1,17 @@
+type: task
+
+python: "3.12"
+
+commands:
+  - git clone https://github.com/yixiaoer/tpu-training-example.git
+  - cd tpu-training-example
+  - pip install -U "jax[tpu]" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+  - pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu
+  - pip install git+https://github.com/huggingface/transformers
+  - pip install flax jax_smi sentencepiece datasets optax einshard wandb
+  - python train.py --WANDB_API_KEY <REPLACE_with_YOUR_WANDB_API_KEY>
+
+resources:
+  gpu:  tpu-v3-8
+  memory: 100GB
+  shm_size: 50GB
